@@ -1,0 +1,12 @@
+<%- include('partials/header') %>
+
+<h1><%= title %></h1>
+<section class="category-list">
+  <ul>
+    <% categories.forEach(category => { %>
+      <li class="category-item"><%= category %></li>
+    <% }) %>
+  </ul>
+</section>
+
+<%- include('partials/footer') %>
