@@ -2,16 +2,24 @@
 
 <h1><%= title %></h1>
 <section class="grid">
-  <div class="card">
-    <img src="/images/org1.jpg" alt="Community Food Bank organization">
-    <h2>Community Food Bank</h2>
-    <p>Providing meals to families in need since 1995.</p>
-  </div>
-  <div class="card">
-    <img src="/images/org2.jpg" alt="Habitat for Humanity organization">
-    <h2>Habitat for Humanity</h2>
-    <p>Building homes and hope in our community.</p>
-  </div>
+  <% if (organizations && organizations.length > 0) { %>
+    <% organizations.forEach(org => { %>
+      <div class="card">
+        <% if (org.logo_filename) { %>
+          <img src="/images/<%= org.logo_filename %>" alt="<%= org.name %> logo" class="org-logo">
+        <% } else { %>
+          <div class="org-logo-placeholder">
+            <span class="logo-initials"><%= org.name.split(' ').map(w => w[0]).join('') %></span>
+          </div>
+        <% } %>
+        <h2><%= org.name %></h2>
+        <p><%= org.description %></p>
+        <p class="contact-email">📧 <a href="mailto:<%= org.contact_email %>"><%= org.contact_email %></a></p>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>No organizations found.</p>
+  <% } %>
 </section>
 
 <%- include('partials/footer') %>

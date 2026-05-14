@@ -1,0 +1,52 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#7c2d12" rx="10"/>
+  
+  <!-- Central circle representing unity -->
+  <circle cx="100" cy="100" r="45" fill="#ea580c" opacity="0.3"/>
+  <circle cx="100" cy="100" r="35" fill="none" stroke="#ea580c" stroke-width="2"/>
+  
+  <!-- 5 stylized hands around circle -->
+  <!-- Top hand -->
+  <g transform="translate(100, 50)">
+    <path d="M 0,0 L -8,-20 M 0,0 L -3,-22 M 0,0 L 3,-22 M 0,0 L 8,-20 M 0,0 L 0,-25" 
+          stroke="#fbbf24" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <circle cx="0" cy="0" r="8" fill="#fed7aa" stroke="#fbbf24" stroke-width="2"/>
+  </g>
+  
+  <!-- Top-right hand -->
+  <g transform="translate(135, 70) rotate(72)">
+    <path d="M 0,0 L -8,-20 M 0,0 L -3,-22 M 0,0 L 3,-22 M 0,0 L 8,-20 M 0,0 L 0,-25" 
+          stroke="#fbbf24" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <circle cx="0" cy="0" r="8" fill="#fed7aa" stroke="#fbbf24" stroke-width="2"/>
+  </g>
+  
+  <!-- Bottom-right hand -->
+  <g transform="translate(128, 145) rotate(144)">
+    <path d="M 0,0 L -8,-20 M 0,0 L -3,-22 M 0,0 L 3,-22 M 0,0 L 8,-20 M 0,0 L 0,-25" 
+          stroke="#fbbf24" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <circle cx="0" cy="0" r="8" fill="#fed7aa" stroke="#fbbf24" stroke-width="2"/>
+  </g>
+  
+  <!-- Bottom-left hand -->
+  <g transform="translate(72, 145) rotate(216)">
+    <path d="M 0,0 L -8,-20 M 0,0 L -3,-22 M 0,0 L 3,-22 M 0,0 L 8,-20 M 0,0 L 0,-25" 
+          stroke="#fbbf24" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <circle cx="0" cy="0" r="8" fill="#fed7aa" stroke="#fbbf24" stroke-width="2"/>
+  </g>
+  
+  <!-- Top-left hand -->
+  <g transform="translate(65, 70) rotate(288)">
+    <path d="M 0,0 L -8,-20 M 0,0 L -3,-22 M 0,0 L 3,-22 M 0,0 L 8,-20 M 0,0 L 0,-25" 
+          stroke="#fbbf24" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <circle cx="0" cy="0" r="8" fill="#fed7aa" stroke="#fbbf24" stroke-width="2"/>
+  </g>
+  
+  <!-- Heart in center -->
+  <path d="M 100,95 C 100,90 95,85 90,85 C 85,85 82,88 82,92 C 82,88 79,85 74,85 C 69,85 64,90 64,95 C 64,105 82,115 82,115 C 82,115 100,105 100,95 Z" 
+        fill="#dc2626" opacity="0.8"/>
+  
+  <!-- Text -->
+  <text x="100" y="155" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">UnityServe</text>
+  <text x="100" y="174" font-family="Arial, sans-serif" font-size="12" fill="#fed7aa" text-anchor="middle">Volunteers</text>
+</svg>
