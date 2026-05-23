@@ -1,22 +1,22 @@
 <%- include('partials/header') %>
-
-<h1><%= title %></h1>
-<section class="grid">
-  <% if (projects && projects.length > 0) { %>
-    <% projects.forEach(project => { %>
-      <div class="card project-card">
-        <h2><%= project.title %></h2>
-        <p class="organization">🏢 <strong><%= project.organization_name %></strong></p>
-        <p class="description"><%= project.description %></p>
-        <p class="location">📍 <strong>Location:</strong> <%= project.location %></p>
-        <% if (project.categories) { %>
-          <p class="categories"><strong>Categories:</strong> <%= project.categories %></p>
+<main>
+    <h1><%= title %></h1>
+    <section class="grid">
+        <% if (projects && projects.length > 0) { %>
+            <% projects.forEach(project => { %>
+                <div class="card project-card">
+                    <h2><a href="/project/<%= project.project_id %>"><%= project.title %></a></h2>
+                    <p class="organization">🏢 <strong><a href="/organization/<%= project.organization_id %>"><%= project.organization_name %></a></strong></p>
+                    <p class="description"><%= project.description %></p>
+                    <p class="location">📍 <strong>Location:</strong> <%= project.location %></p>
+                    <% if (project.categories) { %>
+                        <p class="categories"><strong>Categories:</strong> <%= project.categories %></p>
+                    <% } %>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p>No projects found.</p>
         <% } %>
-      </div>
-    <% }) %>
-  <% } else { %>
-    <p>No projects found.</p>
-  <% } %>
-</section>
-
+    </section>
+</main>
 <%- include('partials/footer') %>

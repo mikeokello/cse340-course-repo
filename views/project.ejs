@@ -1,0 +1,18 @@
+<%- include('partials/header') %>
+<main>
+    <h1><%= title %></h1>
+    <h2><%= projectDetails.title %></h2>
+    <p><strong>Organization:</strong> <a href="/organization/<%= projectDetails.organization_id %>"><%= projectDetails.organization_name %></a></p>
+    <p><strong>Description:</strong> <%= projectDetails.description %></p>
+    <p><strong>Location:</strong> <%= projectDetails.location %></p>
+
+    <% if (projectDetails.categories && projectDetails.categories.length > 0) { %>
+        <p>
+            <strong>Categories:</strong>
+            <% projectDetails.categories.forEach((category, index) => { %>
+                <a href="/category/<%= category.category_id %>"><%= category.name %></a><% if (index < projectDetails.categories.length - 1) { %>, <% } %>
+            <% }) %>
+        </p>
+    <% } %>
+</main>
+<%- include('partials/footer') %>

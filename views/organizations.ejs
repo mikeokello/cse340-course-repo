@@ -1,25 +1,19 @@
 <%- include('partials/header') %>
-
-<h1><%= title %></h1>
-<section class="grid">
-  <% if (organizations && organizations.length > 0) { %>
-    <% organizations.forEach(org => { %>
-      <div class="card">
-        <% if (org.logo_filename) { %>
-          <img src="/images/<%= org.logo_filename %>" alt="<%= org.name %> logo" class="org-logo">
+<main>
+    <h1><%= title %></h1>
+    <section class="grid">
+        <% if (organizations && organizations.length > 0) { %>
+            <% organizations.forEach(org => { %>
+                <div class="card">
+                    <img src="/images/<%= org.logo_filename %>" alt="<%= org.name %> logo" class="org-logo">
+                    <h2><a href="/organization/<%= org.organization_id %>"><%= org.name %></a></h2>
+                    <p><%= org.description %></p>
+                    <p class="contact-email">📧 <a href="mailto:<%= org.contact_email %>"><%= org.contact_email %></a></p>
+                </div>
+            <% }) %>
         <% } else { %>
-          <div class="org-logo-placeholder">
-            <span class="logo-initials"><%= org.name.split(' ').map(w => w[0]).join('') %></span>
-          </div>
+            <p>No organizations found.</p>
         <% } %>
-        <h2><%= org.name %></h2>
-        <p><%= org.description %></p>
-        <p class="contact-email">📧 <a href="mailto:<%= org.contact_email %>"><%= org.contact_email %></a></p>
-      </div>
-    <% }) %>
-  <% } else { %>
-    <p>No organizations found.</p>
-  <% } %>
-</section>
-
+    </section>
+</main>
 <%- include('partials/footer') %>
