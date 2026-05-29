@@ -116,3 +116,33 @@ export const getProjectsByCategory = async (categoryId) => {
     throw new Error('Failed to fetch category projects from database')
   }
 }
+export const createProject = async (organization_id, title, description, location) => {
+  try {
+    const query = `
+      INSERT INTO public.service_project (organization_id, title, description, location)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *
+    `
+    const result = await db.query(query, [organization_id, title, description, location])
+    return result.rows[0]
+  } catch (error) {
+    console.error('Error creating project:', error.message)
+    throw new Error('Failed to create project')
+  }
+}
+
+export const updateProject = async (projectId, organization_id, title, description, location) => {
+  try {
+    const query = `
+      UPDATE public.service_project
+      SET organization_id = $1, title = $2, description = $3, location = $4
+      WHERE project_id = $5
+      RETURNING *
+    `
+    const result = await db.query(query, [organization_id, title, description, location, projectId])
+    return result.rows[0] || null
+  } catch (error) {
+    console.error('Error updating project:', error.message)
+    throw new Error('Failed to update project')
+  }
+}

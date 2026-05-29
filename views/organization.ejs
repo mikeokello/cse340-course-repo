@@ -16,5 +16,10 @@
     <% } else { %>
         <p>No projects for this organization yet.</p>
     <% } %>
+
+    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+        <a href="/edit-organization/<%= organizationDetails.organization_id %>" class="btn btn-primary">Edit Organization</a>
+        <a href="/organizations" class="btn btn-secondary">Back to Organizations</a>
+    </div>
 </main>
 <%- include('partials/footer') %>

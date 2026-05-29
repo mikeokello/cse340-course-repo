@@ -5,20 +5,20 @@ dotenv.config()
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes("render.com") 
-   ? { rejectUnauthorized: false } 
+  ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes("render.com")
+  ? { rejectUnauthorized: false }
     : false,
   max: 10,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000
 })
 
-// Handle pool errors
 pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err)
 })
 
 export const db = {
+  pool,
   async query(text, params) {
     if (process.env.ENABLE_SQL_LOGGING === 'true') {
       const start = Date.now()

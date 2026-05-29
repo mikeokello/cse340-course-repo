@@ -1,0 +1,117 @@
+<%- include('partials/header') %>
+<main class="container">
+    <h1><%= title %></h1>
+
+    <% if (errors && errors.length > 0) { %>
+        <div class="error-container" style="border-left-color: var(--danger);">
+            <ul>
+                <% errors.forEach(error => { %>
+                    <li><%= error %></li>
+                <% }) %>
+            </ul>
+        </div>
+    <% } %>
+
+    <form action="<%= action %>" method="POST" class="card" style="max-width: 700px;" id="organizationForm">
+        <div style="margin-bottom: 1rem;">
+            <label for="name">Organization Name <span style="color: red;">*</span></label>
+            <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                value="<%= formData.name || '' %>" 
+                required 
+                minlength="1"
+                maxlength="150"
+                pattern="^[a-zA-Z0-9\s\-&',.]*$"
+                placeholder="Enter organization name"
+                title="Please enter a valid organization name (max 150 characters)"
+            >
+            <small style="color: var(--text-light);">Max 150 characters</small>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label for="description">Description <span style="color: red;">*</span></label>
+            <textarea 
+                id="description" 
+                name="description" 
+                required 
+                rows="4" 
+                style="width: 100%; padding: 0.75rem;"
+                minlength="10"
+                maxlength="1000"
+                placeholder="Enter a detailed description"
+                title="Please enter a description (10-1000 characters)"
+            ><%= formData.description || '' %></textarea>
+            <small style="color: var(--text-light);">Min 10, Max 1000 characters</small>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label for="contact_email">Contact Email <span style="color: red;">*</span></label>
+            <input 
+                type="email" 
+                id="contact_email" 
+                name="contact_email" 
+                value="<%= formData.contact_email || '' %>" 
+                required
+                placeholder="example@organization.com"
+                title="Please enter a valid email address"
+            >
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label for="logo_filename">Logo Filename <span style="color: red;">*</span></label>
+            <input 
+                type="text" 
+                id="logo_filename" 
+                name="logo_filename" 
+                value="<%= formData.logo_filename || '' %>" 
+                required
+                maxlength="255"
+                placeholder="logo.svg"
+                title="Please enter a valid filename"
+            >
+            <small style="color: var(--text-light);">Example: logo.svg, logo.png</small>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary"><%= submitText %></button>
+            <a href="/organizations" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</main>
+
+<script>
+    document.getElementById('organizationForm').addEventListener('submit', function(e) {
+        const name = document.getElementById('name').value.trim();
+        const description = document.getElementById('description').value.trim();
+        const email = document.getElementById('contact_email').value.trim();
+        const logo = document.getElementById('logo_filename').value.trim();
+
+        if (!name) {
+            alert('Organization name is required');
+            e.preventDefault();
+            return false;
+        }
+        if (name.length > 150) {
+            alert('Organization name must be 150 characters or less');
+            e.preventDefault();
+            return false;
+        }
+        if (!description || description.length < 10) {
+            alert('Description is required (minimum 10 characters)');
+            e.preventDefault();
+            return false;
+        }
+        if (!email || !email.includes('@')) {
+            alert('Valid email is required');
+            e.preventDefault();
+            return false;
+        }
+        if (!logo) {
+            alert('Logo filename is required');
+            e.preventDefault();
+            return false;
+        }
+        return true;
+    });
+</script>
+
+<%- include('partials/footer') %>

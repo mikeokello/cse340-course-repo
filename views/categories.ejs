@@ -1,6 +1,9 @@
 <%- include('partials/header') %>
 <main>
-    <h1><%= title %></h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1><%= title %></h1>
+        <a href="/new-category" class="btn btn-primary">+ Create Category</a>
+    </div>
     <section class="category-list">
         <ul>
             <% categories.forEach(category => { %>

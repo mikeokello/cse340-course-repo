@@ -16,5 +16,10 @@
     <% } else { %>
         <p>No projects in this category yet.</p>
     <% } %>
+
+    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+        <a href="/edit-category/<%= categoryDetails.category_id %>" class="btn btn-primary">Edit Category</a>
+        <a href="/categories" class="btn btn-secondary">Back to Categories</a>
+    </div>
 </main>
 <%- include('partials/footer') %>

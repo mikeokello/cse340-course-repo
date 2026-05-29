@@ -1,0 +1,114 @@
+<%- include('partials/header') %>
+<main class="container">
+    <h1><%= title %></h1>
+
+    <% if (errors && errors.length > 0) { %>
+        <div class="error-container" style="border-left-color: var(--danger);">
+            <ul>
+                <% errors.forEach(error => { %>
+                    <li><%= error %></li>
+                <% }) %>
+            </ul>
+        </div>
+    <% } %>
+
+    <form action="<%= action %>" method="POST" class="card" style="max-width: 700px;" id="projectForm">
+        <div style="margin-bottom: 1rem;">
+            <label for="organization_id">Organization <span style="color: red;">*</span></label>
+            <select 
+                id="organization_id" 
+                name="organization_id" 
+                required 
+                style="width: 100%; padding: 0.75rem;"
+                title="Please select an organization"
+            >
+                <option value="">-- Select Organization --</option>
+                <% organizations.forEach(org => { %>
+                    <option value="<%= org.organization_id %>" <%= formData.organization_id == org.organization_id ? 'selected' : '' %>>
+                        <%= org.name %>
+                    </option>
+                <% }) %>
+            </select>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label for="title">Project Title <span style="color: red;">*</span></label>
+            <input 
+                type="text" 
+                id="title" 
+                name="title" 
+                value="<%= formData.title || '' %>" 
+                required 
+                minlength="3"
+                maxlength="200"
+                placeholder="Enter project title"
+                title="Project title must be 3-200 characters"
+            >
+            <small style="color: var(--text-light);">Min 3, Max 200 characters</small>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label for="description">Description <span style="color: red;">*</span></label>
+            <textarea 
+                id="description" 
+                name="description" 
+                required 
+                rows="4" 
+                style="width: 100%; padding: 0.75rem;"
+                minlength="10"
+                maxlength="1000"
+                placeholder="Enter a detailed project description"
+                title="Description must be 10-1000 characters"
+            ><%= formData.description || '' %></textarea>
+            <small style="color: var(--text-light);">Min 10, Max 1000 characters</small>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label for="location">Location</label>
+            <input 
+                type="text" 
+                id="location" 
+                name="location" 
+                value="<%= formData.location || '' %>"
+                maxlength="200"
+                placeholder="Enter project location"
+            >
+            <small style="color: var(--text-light);">Max 200 characters (optional)</small>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary"><%= submitText %></button>
+            <a href="/projects" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</main>
+
+<script>
+    document.getElementById('projectForm').addEventListener('submit', function(e) {
+        const orgId = document.getElementById('organization_id').value;
+        const title = document.getElementById('title').value.trim();
+        const description = document.getElementById('description').value.trim();
+        const location = document.getElementById('location').value.trim();
+
+        if (!orgId) {
+            alert('Please select an organization');
+            e.preventDefault();
+            return false;
+        }
+        if (!title || title.length < 3) {
+            alert('Project title is required (minimum 3 characters)');
+            e.preventDefault();
+            return false;
+        }
+        if (title.length > 200) {
+            alert('Project title must be 200 characters or less');
+            e.preventDefault();
+            return false;
+        }
+        if (!description || description.length < 10) {
+            alert('Description is required (minimum 10 characters)');
+            e.preventDefault();
+            return false;
+        }
+        return true;
+    });
+</script>
+
+<%- include('partials/footer') %>

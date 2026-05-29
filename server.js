@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import session from 'express-session';
 import { testConnection } from './src/models/db.js';
 import { initializeDatabase } from './src/models/init.js';
 import router from './src/routes.js';
@@ -14,6 +15,14 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
+
+// Session middleware - required for flash messages
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'cse340-secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 600000 }
+}));
 
 // View engine setup
 app.set('view engine', 'ejs');
@@ -32,9 +41,10 @@ app.use((req, res, next) => {
     next();
 });
 
-// Middleware: Make NODE_ENV available to all templates
+// Middleware: Make NODE_ENV and messages available to all templates
 app.use((req, res, next) => {
     res.locals.NODE_ENV = NODE_ENV;
+    res.locals.messages = req.session.messages || [];
     next();
 });
 
@@ -61,7 +71,8 @@ app.use((err, req, res, next) => {
     res.status(status).render(`errors/${template}`, {
         title: status === 404 ? 'Page Not Found' : 'Server Error',
         error: err.message,
-        stack: err.stack
+        stack: err.stack,
+        NODE_ENV
     });
 });
 

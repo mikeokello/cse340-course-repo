@@ -1,0 +1,65 @@
+<%- include('partials/header') %>
+<main class="container">
+    <h1><%= title %></h1>
+
+    <% if (errors && errors.length > 0) { %>
+        <div class="error-container" style="border-left-color: var(--danger);">
+            <ul>
+                <% errors.forEach(error => { %>
+                    <li><%= error %></li>
+                <% }) %>
+            </ul>
+        </div>
+    <% } %>
+
+    <form action="/assign-categories/<%= project.project_id %>" method="POST" class="card" id="assignCategoriesForm" style="max-width: 600px;">
+        <p><strong>Select which categories apply to this project:</strong></p>
+        <div class="category-list">
+            <ul style="list-style: none; padding: 0;">
+                <% allCategories.forEach(category => { %>
+                    <li class="category-item" style="margin-bottom: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 0.5rem; border-radius: 4px; background-color: #f9f9f9; transition: background-color 0.2s;">
+                            <input
+                                type="checkbox"
+                                name="categoryIds"
+                                value="<%= category.category_id %>"
+                                <%= selectedIds.includes(category.category_id) ? 'checked' : '' %>
+                                style="cursor: pointer; width: 18px; height: 18px;"
+                            >
+                            <span><%= category.name %></span>
+                        </label>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Save Categories</button>
+            <a href="/project/<%= project.project_id %>" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</main>
+
+<script>
+    document.getElementById('assignCategoriesForm').addEventListener('submit', function(e) {
+        const checkboxes = document.querySelectorAll('input[name="categoryIds"]');
+        const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+        
+        // Note: We allow 0 categories to be selected (unassigning all)
+        // This is a valid operation
+        return true;
+    });
+
+    // Add visual feedback on checkbox hover
+    const labels = document.querySelectorAll('.category-item label');
+    labels.forEach(label => {
+        label.addEventListener('mouseover', function() {
+            this.style.backgroundColor = '#f0f0f0';
+        });
+        label.addEventListener('mouseout', function() {
+            this.style.backgroundColor = '#f9f9f9';
+        });
+    });
+</script>
+
+<%- include('partials/footer') %>
