@@ -1,0 +1,45 @@
+<%- include('partials/header') %>
+
+<section class="container">
+  <h1><%= title %></h1>
+
+  <% if (messages && messages.length > 0) { %>
+    <div class="messages">
+      <% messages.forEach(msg => { %>
+        <p class="message"><%= msg %></p>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <div class="users-list">
+    <% if (users && users.length > 0) { %>
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(user => { %>
+            <tr>
+              <td><%= user.user_name %></td>
+              <td><%= user.email %></td>
+              <td><span class="role-badge <%= user.user_role %>"><%= user.user_role %></span></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <p class="user-count">Total Registered Users: <%= users.length %></p>
+    <% } else { %>
+      <p>No registered users found.</p>
+    <% } %>
+  </div>
+
+  <div class="back-link">
+    <a href="/dashboard">Back to Dashboard</a>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

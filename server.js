@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import session from 'express-session';
 import { testConnection } from './src/models/db.js';
 import { initializeDatabase } from './src/models/init.js';
+import { passUserData } from './src/middleware.js';
 import router from './src/routes.js';
 
 dotenv.config();
@@ -47,6 +48,9 @@ app.use((req, res, next) => {
     res.locals.messages = req.session.messages || [];
     next();
 });
+
+// Middleware: Pass user data to all templates
+app.use(passUserData);
 
 // Use router
 app.use(router);

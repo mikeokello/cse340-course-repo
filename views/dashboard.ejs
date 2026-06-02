@@ -1,0 +1,33 @@
+<%- include('partials/header') %>
+
+<section class="container">
+  <h1><%= title %></h1>
+
+  <% if (messages && messages.length > 0) { %>
+    <div class="messages">
+      <% messages.forEach(msg => { %>
+        <p class="message"><%= msg %></p>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <div class="welcome-section">
+    <p>Welcome, <strong><%= user.user_name %></strong>!</p>
+    <p>Email: <%= user.user_email %></p>
+    <p>Role: <strong><%= user.user_role %></strong></p>
+  </div>
+
+  <div class="dashboard-links">
+    <h2>Available Pages</h2>
+    <ul>
+      <li><a href="/organizations">Organizations</a></li>
+      <li><a href="/projects">Service Projects</a></li>
+      <li><a href="/categories">Categories</a></li>
+      <% if (user.user_role === 'admin') { %>
+        <li><a href="/users" class="admin-link">Registered Users</a></li>
+      <% } %>
+    </ul>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

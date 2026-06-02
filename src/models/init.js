@@ -11,10 +11,23 @@ export const initializeDatabase = async () => {
         await db.query('DROP TABLE IF EXISTS public.service_project CASCADE')
         await db.query('DROP TABLE IF EXISTS public.category CASCADE')
         await db.query('DROP TABLE IF EXISTS public.organization CASCADE')
+        await db.query('DROP TABLE IF EXISTS public.user_account CASCADE')
         console.log('✓ Cleaned up existing tables')
       } catch (e) {
         // Tables might not exist, that's okay
       }
+
+      // Create user_account table
+      await db.query(`
+        CREATE TABLE public.user_account (
+            user_id SERIAL PRIMARY KEY,
+            user_name VARCHAR(100) NOT NULL,
+            email VARCHAR(255) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            user_role VARCHAR(50) NOT NULL DEFAULT 'user'
+        )
+      `)
+      console.log('✓ User_account table created')
 
       // Create organization table
       await db.query(`
@@ -114,6 +127,18 @@ export const initializeDatabase = async () => {
       `
       await db.query(pcQuery)
       console.log('✓ Project categories linked')
+
+      // Create admin user (for testing)
+      const bcryptModule = await import('bcrypt')
+      const bcrypt = bcryptModule.default
+      const adminPassword = await bcrypt.hash('cse340!', 10)
+      const adminQuery = `
+        INSERT INTO public.user_account (user_name, email, password, user_role) 
+        VALUES ('Admin User', 'admin@example.com', $1, 'admin')
+        ON CONFLICT (email) DO NOTHING
+      `
+      await db.query(adminQuery, [adminPassword])
+      console.log('✓ Admin user created')
 
       console.log('✅ Database initialization complete')
       return true
