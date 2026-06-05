@@ -32,6 +32,16 @@ CREATE TABLE public.project_category (
     FOREIGN KEY (category_id) REFERENCES public.category(category_id) ON DELETE CASCADE
 );
 
+-- Volunteer table for many-to-many relationship between users and projects
+CREATE TABLE public.project_volunteer (
+    user_id INTEGER NOT NULL,
+    project_id INTEGER NOT NULL,
+    volunteered_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, project_id),
+    FOREIGN KEY (user_id) REFERENCES public.user_account(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (project_id) REFERENCES public.service_project(project_id) ON DELETE CASCADE
+);
+
 -- Insert sample organizations
 INSERT INTO public.organization (name, description, contact_email, logo_filename) VALUES 
 ('BrightFuture Builders', 'A nonprofit focused on improving community infrastructure through sustainable construction projects.', 'info@brightfuturebuilders.org', 'brightfuture-logo.png'),

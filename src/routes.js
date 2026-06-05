@@ -36,6 +36,11 @@ import {
     showAssignCategoriesForm,
     processAssignCategories
 } from './controllers/categories.js';
+import {
+    processAddVolunteer,
+    processRemoveVolunteer,
+    processRemoveVolunteerFromDashboard
+} from './controllers/volunteers.js';
 import { testErrorPage } from './controllers/errors.js';
 
 const router = express.Router();
@@ -80,6 +85,11 @@ router.get('/new-category', requireRole('admin'), showCreateCategoryForm);
 router.post('/new-category', requireRole('admin'), processCreateCategory);
 router.get('/edit-category/:id', requireRole('admin'), showEditCategoryForm);
 router.post('/edit-category/:id', requireRole('admin'), processEditCategory);
+
+// Volunteering
+router.post('/volunteer/:id', requireLogin, processAddVolunteer);
+router.post('/unvolunteer/:id', requireLogin, processRemoveVolunteer);
+router.post('/remove-volunteer/:id', requireLogin, processRemoveVolunteerFromDashboard);
 
 router.get('/test-error', testErrorPage);
 

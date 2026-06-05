@@ -1,4 +1,5 @@
 import { registerUser, authenticateUser, getUserById } from '../models/users.js';
+import { getVolunteerProjects } from '../models/volunteers.js';
 
 export const showLoginForm = (req, res) => {
   res.render('login', { title: 'Login' });
@@ -82,7 +83,14 @@ export const processLogout = (req, res) => {
 export const showDashboard = async (req, res) => {
   try {
     const user = await getUserById(req.session.userId);
-    res.render('dashboard', { title: 'Dashboard', user });
+    const volunteerProjects = await getVolunteerProjects(req.session.userId);
+    res.render('dashboard', { 
+      title: 'Dashboard', 
+      user,
+      volunteerProjects,
+      messages: req.session.messages || []
+    });
+    req.session.messages = [];
   } catch (error) {
     console.error('Error showing dashboard:', error.message);
     res.status(500).render('errors/500', { title: 'Server Error', error: error.message });

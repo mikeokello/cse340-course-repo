@@ -1,5 +1,6 @@
 import { getAllProjects, getProjectById, createProject, updateProject } from '../models/projects.js';
 import { getAllOrganizations } from '../models/organizations.js';
+import { isUserVolunteer } from '../models/volunteers.js';
 
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
 
@@ -32,9 +33,17 @@ export const showProjectDetailsPage = async (req, res, next) => {
             err.status = 404;
             return next(err);
         }
+
+        // Check if user is logged in and is a volunteer
+        let isVolunteer = false;
+        if (req.session.userId) {
+            isVolunteer = await isUserVolunteer(req.session.userId, projectId);
+        }
+
         res.render('project', {
             title: 'Project Details',
             projectDetails,
+            isVolunteer,
             messages: req.session.messages || []
         });
         req.session.messages = [];

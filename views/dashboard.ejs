@@ -6,7 +6,7 @@
   <% if (messages && messages.length > 0) { %>
     <div class="messages">
       <% messages.forEach(msg => { %>
-        <p class="message"><%= msg %></p>
+        <p class="message"><%= msg.text || msg %></p>
       <% }); %>
     </div>
   <% } %>
@@ -15,6 +15,30 @@
     <p>Welcome, <strong><%= user.user_name %></strong>!</p>
     <p>Email: <%= user.user_email %></p>
     <p>Role: <strong><%= user.user_role %></strong></p>
+  </div>
+
+  <!-- Volunteer Projects Section -->
+  <div style="margin-top: 2rem;">
+    <h2>My Volunteer Projects</h2>
+    <% if (volunteerProjects && volunteerProjects.length > 0) { %>
+      <div style="margin-top: 1rem;">
+        <% volunteerProjects.forEach(project => { %>
+          <div style="border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem; border-radius: 5px;">
+            <h3><a href="/project/<%= project.project_id %>"><%= project.title %></a></h3>
+            <p><strong>Organization:</strong> <a href="/organization/<%= project.organization_id %>"><%= project.organization_name %></a></p>
+            <p><strong>Location:</strong> <%= project.location %></p>
+            <p><strong>Description:</strong> <%= project.description.substring(0, 100) %>...</p>
+            <p><strong>Volunteered:</strong> <%= new Date(project.volunteered_date).toLocaleDateString() %></p>
+            <form action="/remove-volunteer/<%= project.project_id %>" method="POST" style="display: inline;">
+              <button type="submit" class="btn btn-danger">Remove as Volunteer</button>
+            </form>
+            <a href="/project/<%= project.project_id %>" class="btn btn-secondary">View Details</a>
+          </div>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <p>You have not volunteered for any projects yet. <a href="/projects">Browse available projects</a> to volunteer.</p>
+    <% } %>
   </div>
 
   <div class="dashboard-links">

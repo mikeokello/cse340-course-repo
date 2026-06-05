@@ -15,6 +15,23 @@
         </p>
     <% } %>
 
+    <!-- Volunteer Section -->
+    <% if (user) { %>
+        <div style="margin-top: 2rem; padding: 1rem; background-color: #f0f0f0; border-radius: 5px;">
+            <% if (isVolunteer) { %>
+                <p><strong style="color: green;">✓ You are volunteering for this project</strong></p>
+                <form action="/unvolunteer/<%= projectDetails.project_id %>" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Remove as Volunteer</button>
+                </form>
+            <% } else { %>
+                <p>Interested in volunteering?</p>
+                <form action="/volunteer/<%= projectDetails.project_id %>" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-success">Volunteer for This Project</button>
+                </form>
+            <% } %>
+        </div>
+    <% } %>
+
     <div style="margin-top: 2rem; display: flex; gap: 1rem;">
         <a href="/edit-project/<%= projectDetails.project_id %>" class="btn btn-primary">Edit Project</a>
         <a href="/assign-categories/<%= projectDetails.project_id %>" class="btn btn-secondary">Assign Categories</a>
