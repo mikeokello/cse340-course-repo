@@ -30,4 +30,19 @@
       </ul>
     </nav>
   </header>
+
+  <!-- Global Messages Display -->
+  <% if (messages && messages.length > 0) { %>
+    <div class="messages-container">
+      <% messages.forEach(msg => { %>
+        <% var msgType = (typeof msg === 'object' && msg.type) ? msg.type : 'info'; %>
+        <% var msgText = (typeof msg === 'object' && msg.text) ? msg.text : msg; %>
+        <div class="alert alert-<%= msgType %>">
+          <%= msgText %>
+          <button type="button" class="close-alert" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+      <% }); %>
+    </div>
+  <% } %>
+
   <main class="container">

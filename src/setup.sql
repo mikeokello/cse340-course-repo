@@ -1,3 +1,12 @@
+-- User Account table
+CREATE TABLE public.user_account (
+    user_id SERIAL PRIMARY KEY,
+    user_name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    user_role VARCHAR(50) NOT NULL DEFAULT 'user'
+);
+
 -- Organizations table
 CREATE TABLE public.organization (
     organization_id SERIAL PRIMARY KEY,
@@ -74,3 +83,9 @@ INSERT INTO public.project_category (project_id, category_id) VALUES
 (2, 2),  -- Urban Farm Workshop is Environment
 (3, 1)   -- Food Drive Coordination is Community Service
 ON CONFLICT DO NOTHING;
+
+-- Insert test admin user (password: cse340!)
+-- The password hash below is: $2b$10$Z1h5HnWdP9nGe3/BQqL3rONNNQpqL1Qk7VE5hB8rJ7P5ZU5d5jXpm
+INSERT INTO public.user_account (user_name, email, password, user_role) VALUES 
+('Admin User', 'admin@example.com', '$2b$10$Z1h5HnWdP9nGe3/BQqL3rONNNQpqL1Qk7VE5hB8rJ7P5ZU5d5jXpm', 'admin')
+ON CONFLICT (email) DO NOTHING;

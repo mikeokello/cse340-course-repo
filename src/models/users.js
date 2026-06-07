@@ -74,11 +74,17 @@ export const verifyPassword = async (password, hashedPassword) => {
 
 export const authenticateUser = async (email, password) => {
   try {
+    // Validate inputs
+    if (!email || !password) {
+      throw new Error('Email and password are required');
+    }
+
     const user = await getUserByEmail(email);
     if (!user) {
       throw new Error('User not found');
     }
 
+    // Verify password
     const passwordValid = await verifyPassword(password, user.password);
     if (!passwordValid) {
       throw new Error('Invalid password');
@@ -92,7 +98,7 @@ export const authenticateUser = async (email, password) => {
       user_role: user.user_role
     };
   } catch (error) {
-    console.error('Error authenticating user:', error.message);
+    console.error('Authentication error:', error.message);
     throw error;
   }
 };

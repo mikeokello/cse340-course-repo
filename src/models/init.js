@@ -7,6 +7,7 @@ export const initializeDatabase = async () => {
     try {
       // Drop existing tables in correct order (respecting foreign keys)
       try {
+        await db.query('DROP TABLE IF EXISTS public.project_volunteer CASCADE')
         await db.query('DROP TABLE IF EXISTS public.project_category CASCADE')
         await db.query('DROP TABLE IF EXISTS public.service_project CASCADE')
         await db.query('DROP TABLE IF EXISTS public.category CASCADE')
@@ -74,6 +75,19 @@ export const initializeDatabase = async () => {
         )
       `)
       console.log('✓ Project_category table created')
+
+      // Create project_volunteer table
+      await db.query(`
+        CREATE TABLE public.project_volunteer (
+            user_id INTEGER NOT NULL,
+            project_id INTEGER NOT NULL,
+            volunteered_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (user_id, project_id),
+            FOREIGN KEY (user_id) REFERENCES public.user_account(user_id) ON DELETE CASCADE,
+            FOREIGN KEY (project_id) REFERENCES public.service_project(project_id) ON DELETE CASCADE
+        )
+      `)
+      console.log('✓ Project_volunteer table created')
 
       // Insert sample organizations
       const orgQuery = `

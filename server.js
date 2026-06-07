@@ -62,22 +62,45 @@ app.use((req, res, next) => {
     next(err);
 });
 
-// Global error handler
+// Global error handler - only for unhandled errors
 app.use((err, req, res, next) => {
     const status = err.status || 500;
     const template = status === 404 ? '404' : '500';
 
-    console.error('ERROR:', err.message);
+    console.error('UNHANDLED ERROR:', err.message);
     if (NODE_ENV === 'development') {
         console.error(err.stack);
     }
 
-    res.status(status).render(`errors/${template}`, {
-        title: status === 404 ? 'Page Not Found' : 'Server Error',
-        error: err.message,
-        stack: err.stack,
-        NODE_ENV
-    });
+    // Don't render error page if response has already been sent
+    if (res.headersSent) {
+        return;
+    }
+
+    try {
+        res.status(status).render(`errors/${template}`, {
+            title: status === 404 ? 'Page Not Found' : 'Server Error',
+            error: err.message,
+            stack: err.stack,
+            NODE_ENV
+        });
+    } catch (renderError) {
+        // Fallback plain text response if template rendering fails
+        console.error('Error rendering error page:', renderError.message);
+        res.status(status).send(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>${status === 404 ? 'Page Not Found' : 'Server Error'}</title>
+            </head>
+            <body>
+                <h1>${status === 404 ? 'Page Not Found' : 'Server Error'}</h1>
+                <p>We are experiencing technical difficulties.</p>
+                <a href="/">Return to homepage</a>
+            </body>
+            </html>
+        `);
+    }
 });
 
 app.listen(PORT, async () => {

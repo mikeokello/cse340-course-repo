@@ -13,6 +13,13 @@ export const processLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Validate input
+    if (!email || !password) {
+      req.session.messages = [{ type: 'danger', text: 'Email and password are required' }];
+      return res.render('login', { title: 'Login' });
+    }
+
+    // Authenticate user
     const user = await authenticateUser(email, password);
     
     // Store user in session
@@ -20,14 +27,27 @@ export const processLogin = async (req, res) => {
     req.session.userName = user.user_name;
     req.session.userEmail = user.email;
     req.session.userRole = user.user_role;
-
-    // Store message
-    req.session.messages = [`Welcome back, ${user.user_name}!`];
+    req.session.messages = [{ type: 'success', text: `Welcome back, ${user.user_name}!` }];
     
-    res.redirect('/dashboard');
+    // Save session before redirecting
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err.message);
+        req.session.messages = [{ type: 'danger', text: 'Server error: Unable to save session' }];
+        return res.render('login', { title: 'Login' });
+      }
+      res.redirect('/dashboard');
+    });
   } catch (error) {
-    req.session.messages = [`Login failed: ${error.message}`];
-    res.status(401).render('login', { title: 'Login' });
+    console.error('Login error:', error.message);
+    const errorMessage = error.message === 'User not found' 
+      ? 'Invalid email or password'
+      : error.message === 'Invalid password'
+      ? 'Invalid email or password'
+      : error.message || 'Login failed';
+    
+    req.session.messages = [{ type: 'danger', text: errorMessage }];
+    res.render('login', { title: 'Login' });
   }
 };
 
@@ -37,17 +57,17 @@ export const processRegister = async (req, res) => {
   try {
     // Validate input
     if (!userName || !email || !password || !passwordConfirm) {
-      req.session.messages = ['All fields are required'];
+      req.session.messages = [{ type: 'danger', text: 'All fields are required' }];
       return res.render('register', { title: 'Register' });
     }
 
     if (password !== passwordConfirm) {
-      req.session.messages = ['Passwords do not match'];
+      req.session.messages = [{ type: 'danger', text: 'Passwords do not match' }];
       return res.render('register', { title: 'Register' });
     }
 
     if (password.length < 8) {
-      req.session.messages = ['Password must be at least 8 characters long'];
+      req.session.messages = [{ type: 'danger', text: 'Password must be at least 8 characters long' }];
       return res.render('register', { title: 'Register' });
     }
 
@@ -59,14 +79,22 @@ export const processRegister = async (req, res) => {
     req.session.userName = newUser.user_name;
     req.session.userEmail = newUser.email;
     req.session.userRole = newUser.user_role;
+    req.session.messages = [{ type: 'success', text: `Registration successful! Welcome, ${newUser.user_name}!` }];
 
-    // Store message
-    req.session.messages = [`Registration successful! Welcome, ${newUser.user_name}!`];
-
-    res.redirect('/dashboard');
+    // Save session before redirecting
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err.message);
+        req.session.messages = [{ type: 'danger', text: 'Server error: Unable to save session' }];
+        return res.render('register', { title: 'Register' });
+      }
+      res.redirect('/dashboard');
+    });
   } catch (error) {
-    req.session.messages = [`Registration failed: ${error.message}`];
-    res.status(400).render('register', { title: 'Register' });
+    console.error('Registration error:', error.message);
+    const errorMessage = error.message || 'Registration failed';
+    req.session.messages = [{ type: 'danger', text: errorMessage }];
+    res.render('register', { title: 'Register' });
   }
 };
 
@@ -82,17 +110,32 @@ export const processLogout = (req, res) => {
 
 export const showDashboard = async (req, res) => {
   try {
+    // Double-check user exists in database
     const user = await getUserById(req.session.userId);
+    if (!user) {
+      req.session.destroy();
+      return res.redirect('/login');
+    }
+
     const volunteerProjects = await getVolunteerProjects(req.session.userId);
+    const messages = req.session.messages || [];
+    
     res.render('dashboard', { 
       title: 'Dashboard', 
       user,
-      volunteerProjects,
-      messages: req.session.messages || []
+      volunteerProjects
     });
+    
+    // Clear messages after rendering
     req.session.messages = [];
   } catch (error) {
     console.error('Error showing dashboard:', error.message);
-    res.status(500).render('errors/500', { title: 'Server Error', error: error.message });
+    req.session.messages = [{ type: 'danger', text: `Error loading dashboard: ${error.message}` }];
+    res.render('dashboard', { 
+      title: 'Dashboard',
+      user: null,
+      volunteerProjects: [],
+      error: true
+    });
   }
 };
