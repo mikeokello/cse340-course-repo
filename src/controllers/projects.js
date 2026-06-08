@@ -61,7 +61,8 @@ export const showCreateProjectForm = async (req, res) => {
         organizations,
         errors: [],
         action: '/new-project',
-        submitText: 'Create Project'
+        submitText: 'Create Project',
+        messages: req.session.messages || []
     });
 };
 
@@ -78,7 +79,8 @@ export const processCreateProject = async (req, res, next) => {
                 organizations,
                 errors,
                 action: '/new-project',
-                submitText: 'Create Project'
+                submitText: 'Create Project',
+                messages: req.session.messages || []
             });
         }
 
@@ -107,7 +109,8 @@ export const showEditProjectForm = async (req, res, next) => {
             organizations,
             errors: [],
             action: `/edit-project/${projectId}`,
-            submitText: 'Update Project'
+            submitText: 'Update Project',
+            messages: req.session.messages || []
         });
     } catch (error) {
         next(error);
@@ -128,7 +131,8 @@ export const processEditProject = async (req, res, next) => {
                 organizations,
                 errors,
                 action: `/edit-project/${projectId}`,
-                submitText: 'Update Project'
+                submitText: 'Update Project',
+                messages: req.session.messages || []
             });
         }
 

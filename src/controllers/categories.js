@@ -50,7 +50,8 @@ export const showCreateCategoryForm = (req, res) => {
         formData: {},
         errors: [],
         action: '/new-category',
-        submitText: 'Create Category'
+        submitText: 'Create Category',
+        messages: req.session.messages || []
     });
 };
 
@@ -66,7 +67,8 @@ export const processCreateCategory = async (req, res, next) => {
                 formData: { name },
                 errors,
                 action: '/new-category',
-                submitText: 'Create Category'
+                submitText: 'Create Category',
+                messages: req.session.messages || []
             });
         }
 
@@ -98,7 +100,8 @@ export const showEditCategoryForm = async (req, res, next) => {
             formData: category,
             errors: [],
             action: `/edit-category/${categoryId}`,
-            submitText: 'Update Category'
+            submitText: 'Update Category',
+            messages: req.session.messages || []
         });
     } catch (error) {
         next(error);
@@ -118,7 +121,8 @@ export const processEditCategory = async (req, res, next) => {
                 formData: { category_id: categoryId, name },
                 errors,
                 action: `/edit-category/${categoryId}`,
-                submitText: 'Update Category'
+                submitText: 'Update Category',
+                messages: req.session.messages || []
             });
         }
 
@@ -155,7 +159,8 @@ export const showAssignCategoriesForm = async (req, res, next) => {
             project,
             allCategories,
             selectedIds,
-            errors: []
+            errors: [],
+            messages: req.session.messages || []
         });
     } catch (error) {
         next(error);

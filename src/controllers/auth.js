@@ -2,11 +2,11 @@ import { registerUser, authenticateUser, getUserById } from '../models/users.js'
 import { getVolunteerProjects } from '../models/volunteers.js';
 
 export const showLoginForm = (req, res) => {
-  res.render('login', { title: 'Login' });
+  res.render('login', { title: 'Login', messages: req.session.messages || [] });
 };
 
 export const showRegisterForm = (req, res) => {
-  res.render('register', { title: 'Register' });
+  res.render('register', { title: 'Register', messages: req.session.messages || [] });
 };
 
 export const processLogin = async (req, res) => {
@@ -16,7 +16,7 @@ export const processLogin = async (req, res) => {
     // Validate input
     if (!email || !password) {
       req.session.messages = [{ type: 'danger', text: 'Email and password are required' }];
-      return res.render('login', { title: 'Login' });
+      return res.render('login', { title: 'Login', messages: req.session.messages || [] });
     }
 
     // Authenticate user
@@ -34,7 +34,7 @@ export const processLogin = async (req, res) => {
       if (err) {
         console.error('Session save error:', err.message);
         req.session.messages = [{ type: 'danger', text: 'Server error: Unable to save session' }];
-        return res.render('login', { title: 'Login' });
+        return res.render('login', { title: 'Login', messages: req.session.messages || [] });
       }
       res.redirect('/dashboard');
     });
@@ -47,7 +47,7 @@ export const processLogin = async (req, res) => {
       : error.message || 'Login failed';
     
     req.session.messages = [{ type: 'danger', text: errorMessage }];
-    res.render('login', { title: 'Login' });
+    res.render('login', { title: 'Login', messages: req.session.messages || [] });
   }
 };
 
@@ -58,17 +58,17 @@ export const processRegister = async (req, res) => {
     // Validate input
     if (!userName || !email || !password || !passwordConfirm) {
       req.session.messages = [{ type: 'danger', text: 'All fields are required' }];
-      return res.render('register', { title: 'Register' });
+      return res.render('register', { title: 'Register', messages: req.session.messages || [] });
     }
 
     if (password !== passwordConfirm) {
       req.session.messages = [{ type: 'danger', text: 'Passwords do not match' }];
-      return res.render('register', { title: 'Register' });
+      return res.render('register', { title: 'Register', messages: req.session.messages || [] });
     }
 
     if (password.length < 8) {
       req.session.messages = [{ type: 'danger', text: 'Password must be at least 8 characters long' }];
-      return res.render('register', { title: 'Register' });
+      return res.render('register', { title: 'Register', messages: req.session.messages || [] });
     }
 
     // Register user
@@ -86,7 +86,7 @@ export const processRegister = async (req, res) => {
       if (err) {
         console.error('Session save error:', err.message);
         req.session.messages = [{ type: 'danger', text: 'Server error: Unable to save session' }];
-        return res.render('register', { title: 'Register' });
+        return res.render('register', { title: 'Register', messages: req.session.messages || [] });
       }
       res.redirect('/dashboard');
     });
@@ -94,7 +94,7 @@ export const processRegister = async (req, res) => {
     console.error('Registration error:', error.message);
     const errorMessage = error.message || 'Registration failed';
     req.session.messages = [{ type: 'danger', text: errorMessage }];
-    res.render('register', { title: 'Register' });
+    res.render('register', { title: 'Register', messages: req.session.messages || [] });
   }
 };
 
@@ -120,14 +120,15 @@ export const showDashboard = async (req, res) => {
     const volunteerProjects = await getVolunteerProjects(req.session.userId);
     const messages = req.session.messages || [];
     
+    // Clear messages before rendering
+    req.session.messages = [];
+    
     res.render('dashboard', { 
       title: 'Dashboard', 
       user,
-      volunteerProjects
+      volunteerProjects,
+      messages
     });
-    
-    // Clear messages after rendering
-    req.session.messages = [];
   } catch (error) {
     console.error('Error showing dashboard:', error.message);
     req.session.messages = [{ type: 'danger', text: `Error loading dashboard: ${error.message}` }];
@@ -135,6 +136,7 @@ export const showDashboard = async (req, res) => {
       title: 'Dashboard',
       user: null,
       volunteerProjects: [],
+      messages: req.session.messages || [],
       error: true
     });
   }

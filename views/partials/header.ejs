@@ -19,7 +19,7 @@
         <li><a href="/categories">Categories</a></li>
         <% if (user) { %>
           <li><a href="/dashboard">Dashboard</a></li>
-          <% if (user.userRole === 'admin') { %>
+          <% if (user.user_role === 'admin') { %>
             <li><a href="/users">Users</a></li>
           <% } %>
           <li><a href="/logout">Logout</a></li>

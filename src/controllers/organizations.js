@@ -49,7 +49,8 @@ export const showCreateOrganizationForm = (req, res) => {
         formData: {},
         errors: [],
         action: '/new-organization',
-        submitText: 'Create Organization'
+        submitText: 'Create Organization',
+        messages: req.session.messages || []
     });
 };
 
@@ -64,7 +65,8 @@ export const processCreateOrganization = async (req, res, next) => {
                 formData: req.body,
                 errors,
                 action: '/new-organization',
-                submitText: 'Create Organization'
+                submitText: 'Create Organization',
+                messages: req.session.messages || []
             });
         }
 
@@ -91,7 +93,8 @@ export const showEditOrganizationForm = async (req, res, next) => {
             formData: org,
             errors: [],
             action: `/edit-organization/${organizationId}`,
-            submitText: 'Update Organization'
+            submitText: 'Update Organization',
+            messages: req.session.messages || []
         });
     } catch (error) {
         next(error);
@@ -110,7 +113,8 @@ export const processEditOrganization = async (req, res, next) => {
                 formData: { organization_id: organizationId,...req.body },
                 errors,
                 action: `/edit-organization/${organizationId}`,
-                submitText: 'Update Organization'
+                submitText: 'Update Organization',
+                messages: req.session.messages || []
             });
         }
 
