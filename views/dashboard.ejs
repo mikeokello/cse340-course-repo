@@ -3,7 +3,8 @@
 <section class="container">
   <h1><%= title %></h1>
 
-  <% if (error || !user) { %>
+  <% if ((typeof error !== 'undefined' && error) || !user) { %>
+
     <div class="error-message">
       <p>Unable to load dashboard. Please try logging in again.</p>
       <a href="/login" class="btn btn-primary">Go to Login</a>
